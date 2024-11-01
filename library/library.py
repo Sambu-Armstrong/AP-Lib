@@ -1,3 +1,6 @@
+import tkinter as tk
+from tkinter import simpledialog, messagebox
+
 
 class Lib_Item:
     def __init__(self, id, title):
@@ -95,7 +98,7 @@ class Library:
         self._books = []
         self._members = []
 
-    # Adding new books and members
+    # Adding new books and members to the library
     def add_book(self, book):
         self._books.append(book)
         print(f"{book.title} has been added to the Library {book.genre} section")
@@ -131,29 +134,58 @@ class Library:
             print("Invalid member number or book ID")
 
 
-library = Library()
 
-# Adding new books
-b1 = Book(1, "The Night Circus", 219, "Erin Morgenstern", "Fiction")
-library.add_book(b1)
-b2 = Book(2, "Algebra", 250, "Michael Artin", "Academic")
-library.add_book(b2)
-b3 = Book(3, "The Martian", 250, "Andy Weir", "Fiction")
-library.add_book(b3)
 
-# Adding a new  member
-member1 = Member(1, "Armstrong")
-member2 = Member(2, "Dane")
-library.add_member(member1)
-library.add_member(member2)
+#A simple GUI for the library system
+class LibraryGUI:
+    #setting up the GUI window 
+    def __init__(self, root):
+        self.library = Library() #initializing the library
+        self.root = root    #setting the root window
+        self.root.title("Library System")
+        
+        self.setup_gui()
 
-# Borrowing a book
-library.borrow_book(1, 2)  # 1 represents member(Armstrong) and 2 book(Algebra)
-library.borrow_book(2, 3)  # 2 represents member(Dane) and 3 book(The Martian)
-library.list_books()
+    #adding buttons to the GUI window
+    def setup_gui(self):
+        tk.Button(self.root, text="Add Book", command=self.add_book).pack(pady=20)
+        tk.Button(self.root, text="Add Member", command=self.add_member).pack(pady=20)
+        tk.Button(self.root, text="Borrow Book", command=self.borrow_book).pack(pady=20)
+        tk.Button(self.root, text="Return Book", command=self.return_book).pack(pady=20)
+        tk.Button(self.root, text="List Books", command=self.list_books).pack(pady=20)
+    
+    def add_book(self):
+        id = simpledialog.askinteger("Input", "Enter Book ID:")
+        title = simpledialog.askstring("Input", "Enter Book Title:")
+        size = simpledialog.askinteger("Input", "Enter Book Size (pages):")
+        author = simpledialog.askstring("Input", "Enter Book Author:")
+        genre = simpledialog.askstring("Input", "Enter Book Genre:")
+        book = Book(id, title, size, author, genre)
+        self.library.add_book(book)
+    
+    def add_member(self):
+        member_no = simpledialog.askinteger("Input", "Enter Member ID:")
+        name = simpledialog.askstring("Input", "Enter Member Name:")
+        member = Member(member_no, name)
+        self.library.add_member(member)
 
-#returning a book
-library.return_book(1, 2)  # Armstrong returns Algebra
-library.list_books()
+    def borrow_book(self):
+        member_no = simpledialog.askinteger("Input", "Enter Member ID:")
+        book_id = simpledialog.askinteger("Input", "Enter Book ID:")
+        self.library.borrow_book(member_no, book_id)
+
+    def return_book(self):
+        member_no = simpledialog.askinteger("Input", "Enter Member ID:")
+        book_id = simpledialog.askinteger("Input", "Enter Book ID:")
+        self.library.return_book(member_no, book_id)
+
+    def list_books(self):
+        books = '\n'.join([f"ID: {book.id}, Title: {book.title}, Author: {book.author}, Size: {book.size} pages, Status: {'available' if book.available else 'borrowed'}" for book in self.library._books])
+        messagebox.showinfo("Library Books", books)
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = LibraryGUI(root)
+    root.mainloop()
 
 
