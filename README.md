@@ -1,9 +1,9 @@
 # AP-Lib
 
-BBIT 2.2C
+# BBIT 2.2C
 Members:
-Sambu Armstrong - 168205
-Owuonda Joshua - 168871
+    Sambu Armstrong - 168205 ,
+    Owuonda Joshua - 168871
 
 Description of the system
 
